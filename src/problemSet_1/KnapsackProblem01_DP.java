@@ -7,6 +7,38 @@ import java.util.Set;
 // We will have a matrix item vs capacity
 public class KnapsackProblem01_DP {
 
+
+    private static int getMaxValue2(int totalWeight, int[] wArr, int[] vArr) {
+        int[][] matrix = new int[wArr.length+1][totalWeight+1];
+
+        for (int i = 1; i < matrix.length; i++) {
+            for (int j = 1; j < totalWeight+1; j++) {
+                if (wArr[i-1] > j)
+                    matrix[i][j] = matrix[i-1][j];
+                else
+                    matrix[i][j] = Math.max(matrix[i-1][j], vArr[i-1] + matrix[i-1][j-wArr[i-1]]);
+            }
+        }
+
+        printItemPicked(matrix, wArr);
+        return matrix[wArr.length][totalWeight];
+    }
+
+    private static void printItemPicked(int[][] matrix, int[] wArr) {
+        System.out.println("Items selected at index:- ");
+        int i = matrix.length-1, j = matrix[0].length-1;
+        while (j > 0) {
+            if (matrix[i][j] != matrix[i-1][j]) {
+                System.out.print( i-1 +", ");
+                j = j - wArr[i-1];
+            }
+            i--;
+        }
+
+        System.out.println();
+    }
+
+
     private static int getMaxValue(int totalWeight, int[] weight, int[] value){
 
         int[][] matrix = new int[value.length +1][totalWeight +1];
@@ -73,7 +105,7 @@ public class KnapsackProblem01_DP {
             for(int itemNumber = 0; itemNumber < numberOfItems; itemNumber ++)
                 weight[itemNumber] = Integer.valueOf(s[itemNumber]);
 
-            answers[t] = getMaxValue(maxCapacity, weight, values);
+            answers[t] = getMaxValue2(maxCapacity, weight, values);
         }
         for(int answer : answers)
             System.out.println(answer);

@@ -5,6 +5,39 @@ package problemSet_1;
  */
 public class LongestCommonSubsequence_DP {
 
+    private static int getLongestCommonSubsequence2(String str1, String str2) {
+        int[][] matrix = new int[str1.length()+1][str2.length()+1];
+        for (int i = 1; i < matrix.length; i++) {
+            for (int j = 1; j < matrix[0].length; j++) {
+                if (str1.charAt(i-1) == str2.charAt(j-1))
+                    matrix[i][j] = matrix[i-1][j-1] + 1;
+                else
+                    matrix[i][j] = Math.max(matrix[i-1][j], matrix[i][j-1]);
+            }
+        }
+
+        System.out.println(getCommonString2(matrix, str1, str2));
+        return matrix[str1.length()][str2.length()];
+    }
+
+    private static String getCommonString2(int[][] matrix, String str1, String str2) {
+        StringBuffer stringBuffer = new StringBuffer();
+
+        int i = matrix.length-1, j = matrix[0].length-1;
+        while (i > 0 && j > 0) {
+            if (str1.charAt(i-1) == str2.charAt(j-1)) {
+                char[] chars = {str1.charAt(i-1)};
+                stringBuffer = new StringBuffer(new String(chars)).append(stringBuffer);
+                i--; j--;
+            } else if (matrix[i][j] == matrix[i-1][j]) {
+                i--;
+            } else
+                j--;
+        }
+        return new String(stringBuffer);
+
+    }
+
     private static int getLongestCommonSubsequence(String str1, String str2){
         int[][] matrix = new int[str1.length() +1][str2.length() +1];
 
@@ -56,6 +89,6 @@ public class LongestCommonSubsequence_DP {
     }
 
     public static void main(String[] s){
-        System.out.println(getLongestCommonSubsequence("AGGTAB", "GXTXAYB"));
+        System.out.println(getLongestCommonSubsequence2("AGGTAB", "GXTXAYB"));
     }
 }
